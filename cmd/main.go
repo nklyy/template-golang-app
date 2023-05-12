@@ -6,6 +6,7 @@ import (
 	"syscall"
 	"template-golang-app/config"
 	"template-golang-app/pkg/logger"
+	"template-golang-app/pkg/mongodb"
 	"template-golang-app/services/health"
 
 	"github.com/gofiber/fiber/v2"
@@ -35,19 +36,19 @@ func main() {
 		}
 	}(zapLogger)
 
-	// // Connect to database
-	// db, ctx, cancel, err := mongodb.NewConnection(cfg)
-	// if err != nil {
-	// 	zapLogger.Fatalf("failed to connect to mongodb: %s", err)
-	// }
-	// defer mongodb.Close(db, ctx, cancel)
+	// Connect to database
+	db, ctx, cancel, err := mongodb.NewConnection(cfg)
+	if err != nil {
+		zapLogger.Fatalf("failed to connect to mongodb: %s", err)
+	}
+	defer mongodb.Close(db, ctx, cancel)
 
-	// // Ping db
-	// err = mongodb.Ping(db, ctx)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// zapLogger.Info("DB connected successfully")
+	// Ping db
+	err = mongodb.Ping(db, ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	zapLogger.Info("DB connected successfully")
 
 	// Handlers
 	healthHandler := health.NewHandler()
