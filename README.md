@@ -1,1 +1,1 @@
-# Templat Golang App
+# Template Golang App
